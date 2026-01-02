@@ -1,7 +1,7 @@
 import * as qs from "qs";
 
 const SPOTIFY_CLIENT_ID = "787400c8f51d42a28fc8b56fe54e00fb";
-const SPOTIFY_REDIRECT_URI = "https://nikolannaumovski.com/";
+const SPOTIFY_REDIRECT_URI = "https://spotify-stats-api-1.onrender.com/auth/spotify/callback";
 
 export const getSpotifyAuthUrl = () => {
   const scopes = [
