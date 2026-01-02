@@ -9,10 +9,7 @@ export default function CallbackPage() {
   const code = searchParams.get('code');
 
   useEffect(() => {
-    // Simulate OAuth callback processing
     if (code) {
-      // In a real app, you would exchange the code for an access token
-      // with your backend server, which would then call Spotify's API
       setTimeout(() => {
         navigate('/stats');
       }, 2000);

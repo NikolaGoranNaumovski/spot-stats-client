@@ -4,6 +4,8 @@ import LoginPage from "./components/LoginPage";
 import CallbackPage from "./components/CallbackPage";
 import StatsPage from "./components/StatsPage";
 import CreatorStatsPage from "./components/CreatorStatsPage";
+import { ApiClient, ApiClientProvider } from "@nnaumovski/react-api-client";
+import { AuthProvider } from "./providers/auth-provider";
 
 const theme = createTheme({
   palette: {
@@ -116,38 +118,27 @@ const theme = createTheme({
   },
 });
 
-const isAuthenticated = () => {
-  return localStorage.getItem("spotify_access_token") !== null;
-};
-
-// Protected route component
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  if (!isAuthenticated()) {
-    return <Navigate to="/login" replace />;
-  }
-  return <>{children}</>;
-};
+const apiClient = new ApiClient(
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:3000"
+);
 
 export default function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/callback" element={<CallbackPage />} />
-          <Route
-            path="/stats"
-            element={
-              <ProtectedRoute>
-                <StatsPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="/creator" element={<CreatorStatsPage />} />
-          <Route path="/" element={<Navigate to="/login" replace />} />
-        </Routes>
-      </BrowserRouter>
-    </ThemeProvider>
+    <ApiClientProvider apiClient={apiClient}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <BrowserRouter>
+          <AuthProvider>
+            <Routes>
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/callback" element={<CallbackPage />} />
+              <Route path="/stats" element={<StatsPage />} />
+              <Route path="/creator" element={<CreatorStatsPage />} />
+              <Route path="/" element={<Navigate to="/login" replace />} />
+            </Routes>
+          </AuthProvider>
+        </BrowserRouter>
+      </ThemeProvider>
+    </ApiClientProvider>
   );
 }
